@@ -5,6 +5,6 @@ The Python script "install.py" will read the list of bash commands in "commands.
 
 For example: "sudo python install.py" 
 
-Feel free to customize the commands.txt as desiered, just make sure that one and only one command is listed on each line. 
+Feel free to customize the commands.txt as desired, just make sure that one and only one command is listed on each line. 
 
 NOTE: This is pre-alpha code. USE AT YOUR OWN RISK.
