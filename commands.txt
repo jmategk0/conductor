@@ -1,0 +1,5 @@
+apt-get update
+apt-get install htop
+apt-get install gnome-system-tools
+apt-get install nautilus-open-terminal
+apt-get install git
