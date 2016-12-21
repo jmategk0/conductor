@@ -1,4 +1,4 @@
-# UbuntuSetup
+# Conductor
 A simple scripting tool to help setup Ubuntu 16.04 Boxes.
 
 The Python script "install.py" will read the list of bash commands in "commands.txt" and execute them. 
