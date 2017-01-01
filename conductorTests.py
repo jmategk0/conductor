@@ -1,5 +1,5 @@
 import unittest
-import install
+import conductor
 
 
 class TestOperationWrapperMethods(unittest.TestCase):

@@ -70,11 +70,3 @@ class OperationWrapper(object):
         """
         command_list = self.load_commands_from_text_file(command_filename)
         self.run_list_of_commands(command_list)
-
-
-if __name__ == "__main__":
-    # Note: You must run this script with sudo.
-    print("Starting install....")
-    ops = OperationWrapper(debug=True)
-    ops.install("commands.txt")
-    print("Done!")
