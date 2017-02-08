@@ -1,6 +1,43 @@
 import os
 
 
+def command_string_builder(commands_dict, prepend, append="", flags_list="", argument_delimiter="-"):
+
+    """
+
+    :param commands_dict:
+    :param prepend:
+    :param append:
+    :param flags_list:
+    :param argument_delimiter:
+    :return:
+    """
+
+    argument_list = []
+    for key in commands_dict:
+        formatted_key = "{delim}{key_value} ".format(delim=argument_delimiter, key_value=key)
+        argument_string = "{formatted_key}{value} ".format(formatted_key=formatted_key, value=str(commands_dict[key]))
+        argument_list.append(argument_string)
+
+    formatted_command_string = "".join(argument_list)
+
+    if flags_list:
+        my_flags = []
+        for item in flags_list:
+            formatted_flag = "{delim}{flag_value} ".format(delim=argument_delimiter, flag_value=item)
+            my_flags.append(formatted_flag)
+        flags_string = "".join(my_flags)
+        formatted_command_string = "{arg_list}{flags}".format(flags=flags_string, arg_list=formatted_command_string)
+
+    if prepend:
+        formatted_command_string = "{prepend} {arg_list}".format(prepend=prepend, arg_list=formatted_command_string)
+
+    if append:
+        formatted_command_string = "{arg_list} {append}".format(append=append, arg_list=formatted_command_string)
+
+    return formatted_command_string
+
+
 class OperationWrapper(object):
 
     def __init__(self, debug=False):
