@@ -1,0 +1,23 @@
+language: python
+
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+
+notifications:
+  email: never
+
+install:
+  - pip install -U pip wheel
+  - pip install -r requirements/dev.txt
+
+# command to run tests
+script:
+  - flake8 .
+  - coverage run --source conductor -m tests -v
+  - coverage report -m --fail-under=90
+
+branches:
+  only:
+    - master
