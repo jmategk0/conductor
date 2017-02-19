@@ -15,7 +15,7 @@ install:
 # command to run tests
 script:
   - flake8 .
-  - coverage run --source conductor -m tests -v
+  - coverage run --source conductor -m conductor.tests -v
   - coverage report -m --fail-under=90
 
 branches:
