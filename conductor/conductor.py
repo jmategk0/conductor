@@ -6,7 +6,7 @@ def command_string_builder(commands_dict, prepend, append="", flags_list="", arg
     """
 
     :param commands_dict:
-    :param prepend:
+    :param prepend: 
     :param append:
     :param flags_list:
     :param argument_delimiter:
