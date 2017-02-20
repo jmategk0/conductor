@@ -9,6 +9,7 @@ class TestOperationWrapperMethods(unittest.TestCase):
         self.test_dataset = ""
 
     def test_string_builder(self):
+        print("--------")
         data = {"db": "16s", "out": "results.xml", "num_threads": 2, "outfmt": 5}
         name = "blastn"
         flags = ["no_greedy"]
@@ -18,3 +19,6 @@ class TestOperationWrapperMethods(unittest.TestCase):
         array2 = ex_string.split(" ")
         for item in array2:
             self.assertIn(item, array1)
+
+operation_wrapper_test_suite = unittest.TestLoader().loadTestsFromTestCase(TestOperationWrapperMethods)
+unittest.TextTestRunner(verbosity=2).run(operation_wrapper_test_suite)
