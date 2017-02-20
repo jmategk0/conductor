@@ -1,4 +1,6 @@
 import os
+import logging
+import logging.config
 
 
 def command_string_builder(commands_dict, prepend, append="", flags_list="", argument_delimiter="-"):
@@ -29,8 +31,8 @@ def command_string_builder(commands_dict, prepend, append="", flags_list="", arg
         flags_string = "".join(my_flags)
         formatted_command_string = "{arg_list}{flags}".format(flags=flags_string, arg_list=formatted_command_string)
 
-    if prepend:
-        formatted_command_string = "{prepend} {arg_list}".format(prepend=prepend, arg_list=formatted_command_string)
+    # prepend
+    formatted_command_string = "{prepend} {arg_list}".format(prepend=prepend, arg_list=formatted_command_string)
 
     if append:
         formatted_command_string = "{arg_list} {append}".format(append=append, arg_list=formatted_command_string)
@@ -40,8 +42,11 @@ def command_string_builder(commands_dict, prepend, append="", flags_list="", arg
 
 class OperationWrapper(object):
 
-    def __init__(self, debug=False):
+    def __init__(self, debug=False, log_filename=""):
         self.print_command_strings = debug
+        if self.print_command_strings:
+            logging.basicConfig(filename=log_filename, level=logging.INFO)
+            self.logger = logging.getLogger(__name__)
 
     def load_commands_from_text_file(self, filename):
         """
@@ -52,10 +57,6 @@ class OperationWrapper(object):
         """
         with open(filename, 'r') as command_file:
             commands = command_file.read().splitlines()
-
-        if self.print_command_strings:
-            for command in commands:
-                print(command)
 
         return commands
 
@@ -68,7 +69,7 @@ class OperationWrapper(object):
         """
 
         if self.print_command_strings:
-            print(command_string)
+            self.logger.info(command_string)
 
         process = os.popen(command_string)
         process_response = process.read()
@@ -84,6 +85,7 @@ class OperationWrapper(object):
         :param full_dir_path: path what the dir should be created.
         :return: None.
         """
+
         mk_dir_command = "mkdir {dir}".format(dir=full_dir_path)
         self.start_blocking_process(command_string=mk_dir_command)
 
@@ -105,5 +107,6 @@ class OperationWrapper(object):
         :param command_filename:Name of with with a list of shell commands on each line.
         :return: None.
         """
+
         command_list = self.load_commands_from_text_file(command_filename)
         self.run_list_of_commands(command_list)
