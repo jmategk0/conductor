@@ -179,9 +179,12 @@ class OperationWrapper(object):
         """
 
         command = "groups"
-        return self.start_blocking_process(command_string=command)
 
-    def list_user_groups(self, username, verbose):
+        results = self.start_blocking_process(command_string=command)
+        results = str(results).rstrip()
+        return results.split(" ")
+
+    def list_user_groups(self, username, verbose=False):
         """
 
         :param username:
@@ -190,9 +193,35 @@ class OperationWrapper(object):
         """
         if verbose:
             command = "id {user}".format(user=username)
+            raw_results = self.start_blocking_process(command_string=command)
+            raw_results = str(raw_results).rstrip().split(" ")
+
+            # parse uid
+            uid = raw_results[0].replace("uid=", "").replace(")", "")
+            uid_temp = uid.split("(")
+            uid = {uid_temp[0]: uid_temp[1]}
+
+            # parse gid
+            gid = raw_results[1].replace("gid=", "").replace(")", "")
+            gid_temp = gid.split("(")
+            gid = {gid_temp[0]: gid_temp[1]}
+
+            # parse groups
+            groups_raw = raw_results[2].replace("groups=", "").replace(")", "").split(",")
+            groups = {}
+            for group in groups_raw:
+                group_temp = group.split("(")
+                groups[group_temp[0]] = group_temp[1]
+
+            final_results = {"username": username, "uid": uid, "gid": gid, "groups": groups}
         else:
+            string_to_remove = '{user} : '.format(user=username)
             command = "groups {user}".format(user=username)
-        return self.start_blocking_process(command_string=command)
+            raw_results = self.start_blocking_process(command_string=command)
+            raw_results = str(raw_results.rstrip())
+            final_results = raw_results.replace(string_to_remove, "").split(" ")
+
+        return final_results
 
     def add_new_user(self, username, user_home_directory, user_groups):
         """
@@ -328,23 +357,46 @@ class OperationWrapper(object):
         command = "cat {file}".format(file=filename)
         return self.start_blocking_process(command_string=command)
 
-    def list_files(self):
+    def list_files(self, verbose=False):
         """
 
+        :param verbose:
         :return:
         """
 
-        command = "ls"
-        return self.start_blocking_process(command_string=command)
+        if verbose:
+            command = "ls -ll"
+            raw_results = self.start_blocking_process(command_string=command)
+            result_lines = str(raw_results).split("\n")
+            result_lines.pop()
 
-    def list_files_with_permissions(self):
-        """
+            total = result_lines.pop(0)
+            total = total.replace("total ", "")
+            final_lines = []
+            for line in result_lines:
+                split_line = line.split(" ")
+                filtered_line = list(filter(lambda a: a != "", split_line))  # remove all "" from list
+                final_line = {
+                    "permissions": filtered_line[0],
+                    "score": filtered_line[1],
+                    "owner": filtered_line[2],
+                    "group": filtered_line[3],
+                    "size": filtered_line[4],
+                    "month": filtered_line[5],
+                    "day": filtered_line[6],
+                    "time": filtered_line[7],
+                    "filename": filtered_line[8]
+                }
+                final_lines.append(final_line)
 
-        :return:
-        """
+            final_results = {"total": total, "files": final_lines}
 
-        command = "ls -ll"
-        return self.start_blocking_process(command_string=command)
+        else:
+            command = "ls"
+            raw_results = self.start_blocking_process(command_string=command)
+            final_results = str(raw_results).split("\n")
+            final_results.remove("")
+        return final_results
 
     def web_get(self, url):
         """
@@ -445,4 +497,12 @@ class OperationWrapper(object):
         :return:
         """
         command = "apt-get install {name}".format(name=package_name)
+        return self.start_blocking_process(command_string=command)
+
+    def system_uptime(self):
+        """
+
+        :return:
+        """
+        command = "uptime"
         return self.start_blocking_process(command_string=command)
