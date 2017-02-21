@@ -16,7 +16,7 @@ class TestCommandStringBuilder(unittest.TestCase):
 
         actual_string = conductor.command_string_builder(
             prepend=self.software_name,
-            commands_dict=self.software_params,
+            argument_dictionary=self.software_params,
             flags_list=self.software_flags)
 
         actual_string_str_array = actual_string.split(" ")
@@ -32,7 +32,7 @@ class TestCommandStringBuilder(unittest.TestCase):
 
         actual_string = conductor.command_string_builder(
             prepend=self.software_name,
-            commands_dict=self.software_params)
+            argument_dictionary=self.software_params)
 
         actual_string_str_array = actual_string.split(" ")
         expected_string_str_array2 = expected_string.split(" ")
@@ -46,7 +46,7 @@ class TestCommandStringBuilder(unittest.TestCase):
 
         actual_string = conductor.command_string_builder(
             prepend=self.software_name,
-            commands_dict=self.software_params,
+            argument_dictionary=self.software_params,
             argument_delimiter="--")
 
         actual_string_str_array = actual_string.split(" ")
@@ -62,7 +62,7 @@ class TestCommandStringBuilder(unittest.TestCase):
 
         actual_string = conductor.command_string_builder(
             prepend=self.software_name,
-            commands_dict=self.software_params,
+            argument_dictionary=self.software_params,
             append=expected_append_value)
 
         actual_string_str_array = actual_string.split(" ")
@@ -91,7 +91,7 @@ class TestOperationWrapperMethods(unittest.TestCase):
         self.assertEquals(expected_result, result)
 
     def test_make_directory(self):
-        pass
+        pass #TODO: Mock theses tests
 
     def test_run_list_of_commands(self):
         pass
